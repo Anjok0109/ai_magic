@@ -18,20 +18,9 @@ poll_widgets()  # Start polling
 root.mainloop()
 
 
-style.configure('TButton', foreground='#F6F6F7')
-style.configure('TCheckbutton', foreground='#F6F6F7')
-style.configure('TCombobox', foreground='#F6F6F7')
-style.configure('TEntry', foreground='#F6F6F7')
-style.configure('TFrame', foreground='#F6F6F7')
-style.configure('TLabel', foreground='#F6F6F7')
-style.configure('TLabelFrame', foreground='#F6F6F7')
-style.configure('TMenubutton', foreground='#F6F6F7')
-style.configure('TPanedwindow', foreground='#F6F6F7')
-style.configure('TProgressbar', foreground='#F6F6F7')
-style.configure('TRadiobutton', foreground='#F6F6F7')
-style.configure('TScale', foreground='#F6F6F7')
-style.configure('TScrollbar', foreground='#F6F6F7')
-style.configure('TSeparator', foreground='#F6F6F7')
-style.configure('TSizegrip', foreground='#F6F6F7')
-style.configure('TNotebook', foreground='#F6F6F7')
-style.configure('TTreeview', foreground='#F6F6F7')
+
+def modify_optionmenu_dropdown(menu):
+    for item in menu.winfo_children():
+        if isinstance(item, tk.Menu):
+            item.config(foreground='red')
+            modify_optionmenu_dropdown(item)
