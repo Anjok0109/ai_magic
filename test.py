@@ -18,9 +18,20 @@ poll_widgets()  # Start polling
 root.mainloop()
 
 
-    style.map('TCombobox',
-              fieldbackground=[('readonly', 'white')],
-              selectbackground=[('readonly', 'blue')],
-              selectforeground=[('readonly', 'white')],
-              background=[('readonly', 'yellow')]
-              )
+style.configure('TButton', foreground='#F6F6F7')
+style.configure('TCheckbutton', foreground='#F6F6F7')
+style.configure('TCombobox', foreground='#F6F6F7')
+style.configure('TEntry', foreground='#F6F6F7')
+style.configure('TFrame', foreground='#F6F6F7')
+style.configure('TLabel', foreground='#F6F6F7')
+style.configure('TLabelFrame', foreground='#F6F6F7')
+style.configure('TMenubutton', foreground='#F6F6F7')
+style.configure('TPanedwindow', foreground='#F6F6F7')
+style.configure('TProgressbar', foreground='#F6F6F7')
+style.configure('TRadiobutton', foreground='#F6F6F7')
+style.configure('TScale', foreground='#F6F6F7')
+style.configure('TScrollbar', foreground='#F6F6F7')
+style.configure('TSeparator', foreground='#F6F6F7')
+style.configure('TSizegrip', foreground='#F6F6F7')
+style.configure('TNotebook', foreground='#F6F6F7')
+style.configure('TTreeview', foreground='#F6F6F7')
