@@ -1015,14 +1015,7 @@ class ListboxBatchFrame(tk.Frame):
             self.update_displayed_index()
 
     def select_input(self, inputs=None):
-
-        if inputs:
-            files = inputs 
-        else:
-            self.linux_filebox_fix()
-            files = filedialog.askopenfilenames()
-            self.linux_filebox_fix(False)
-
+        files = inputs if inputs else root.show_file_dialog(dialoge_type=MULTIPLE_FILE)
         for file in files:
             if file not in self.path_list:  # only add file if it's not already in the list
                 basename = os.path.basename(file)
@@ -2125,9 +2118,40 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
     
     def linux_filebox_fix(self, is_on=True):
         fg_color_set = 'black' if is_on else "#F6F6F7"
-        if not is_windows and not is_macos:
-            gui_data.sv_ttk.set_theme("dark", MAIN_FONT_NAME, 10, fg_color_set=fg_color_set)
+        gui_data.sv_ttk.set_theme("dark", MAIN_FONT_NAME, 10, fg_color_set=fg_color_set)
 
+    def show_file_dialog(self, text='Select Audio files', dialoge_type=None):
+        parent_win = root
+        
+        if not is_windows and not is_macos:
+            self.linux_filebox_fix()
+            top = tk.Toplevel(root)
+            top.withdraw()
+            top.protocol("WM_DELETE_WINDOW", lambda: None)
+            parent_win = top
+        
+        if dialoge_type == MULTIPLE_FILE:
+            filenames = filedialog.askopenfilenames(parent=parent_win, 
+                                                    title=text)
+        elif dialoge_type == MAIN_MULTIPLE_FILE:
+            filenames = filedialog.askopenfilenames(parent=parent_win, 
+                                                    title=text,
+                                                    initialfile='',
+                                                    initialdir=self.lastDir)
+        elif dialoge_type == SINGLE_FILE:
+            filenames = filedialog.askopenfilename(parent=parent_win, 
+                                                   title=text)
+        elif dialoge_type == CHOOSE_EXPORT_FIR:
+            filenames = filedialog.askdirectory(
+                                    parent=parent_win,
+                                    title=f'Select Folder',)
+            
+        if not is_windows and not is_macos:
+            self.linux_filebox_fix(False)
+            top.destroy()
+            
+        return filenames
+    
     def input_select_filedialog(self):
         """Make user select music files"""
 
@@ -2135,27 +2159,20 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
             if not os.path.isdir(self.lastDir):
                 self.lastDir = None
 
-        self.linux_filebox_fix()
-        paths = filedialog.askopenfilenames(
-            parent=root,
-            title=f'Select Audio Files',
-            initialfile='',
-            initialdir=self.lastDir)
-        self.linux_filebox_fix(False)
-        
+        paths = self.show_file_dialog(dialoge_type=MAIN_MULTIPLE_FILE)
+
         if paths:  # Path selected
             self.inputPaths = paths
+            
             self.process_input_selections()
             self.update_inputPaths()
-            
+
     def export_select_filedialog(self):
         """Make user select a folder to export the converted files in"""
 
         export_path = None
         
-        path = filedialog.askdirectory(
-            parent=root,
-            title=f'Select Folder',)
+        path = self.show_file_dialog(dialoge_type=CHOOSE_EXPORT_FIR)
 
         if path:  # Path selected
             self.export_path_var.set(path)
@@ -2190,12 +2207,8 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         file_path_var, file_basename_var, file_path_2_var, file_basename_2_var = vars[is_primary]
             
         if not path:
-            self.linux_filebox_fix()
-            path = filedialog.askopenfilename(
-                parent=root,
-                title=f'Select Audiofile',)
-            self.linux_filebox_fix(False)
-            
+            path = self.show_file_dialog(text='Select Audio file', dialoge_type=SINGLE_FILE)
+
         if path:  # Path selected
             file_path_var.set(path)
             file_basename_var.set(os.path.basename(path))
